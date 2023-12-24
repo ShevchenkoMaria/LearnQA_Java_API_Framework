@@ -43,4 +43,22 @@ public class ApiCoreRequests {
                 .post(url)
                 .andReturn();
     }
+    @Step ("Make a PUT-request with token and auth cookie")
+    public Response makePutRequest (String url, String token, String cookie,Map<String, String> body){
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .body(body)
+                .put(url)
+                .andReturn();
+    }
+    @Step ("Make a PUT-request without token and cookie")
+    public Response makePutRequestWithoutTokenAndCookie (String url, Map<String, String> body){
+        return given()
+                .filter(new AllureRestAssured())
+                .body(body)
+                .put(url)
+                .andReturn();
+    }
 }
