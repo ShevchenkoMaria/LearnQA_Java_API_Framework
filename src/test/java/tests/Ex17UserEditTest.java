@@ -1,18 +1,28 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.qameta.allure.SeverityLevel.*;
+
+@Epic("Checking different types request with url 'https://playground.learnqa.ru/api/user/'")
+@Feature("Checking PUT-requests for edit user")
+@Issue("PUT-requests")
 public class Ex17UserEditTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests= new ApiCoreRequests();
     @Test
+    @Description("This test successfully edit user's 'firstName'")
+    @DisplayName("Test positive edit user")
+    @Severity(CRITICAL)
     public void testEditUserAuthAsSameUser() {
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -45,6 +55,9 @@ public class Ex17UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
     @Test
+    @Description("This test verifies that user data cannot be changed if the request is made by an unauthorized user")
+    @DisplayName("Test negative edit user without auth")
+    @Severity(NORMAL)
     public void testEditUserWithoutAuth(){
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -62,6 +75,9 @@ public class Ex17UserEditTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseEditUser, "Auth token not supplied");
     }
     @Test
+    @Description("The test verifies that one user's data cannot be changed if the request is performed by another user, in this case the base one")
+    @DisplayName("Test negative edit user with auth as based user")
+    @Severity(MINOR)
     public void testEditUserAuthAsBasedUser(){
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -88,6 +104,9 @@ public class Ex17UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Description("The test verifies that one user's data cannot be changed if the request is performed by another user, in this case both users are created")
+    @DisplayName("Test negative edit user with auth as another user")
+    @Severity(MINOR)
     public void testEditUserAuthAsAnotherUser(){
         //GENERATE USER№1
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -140,6 +159,9 @@ public class Ex17UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUser2Data, "email", userData2.get("email"));
     }
     @Test
+    @Description("This test verifies that the 'email' cannot be changed if the format is set incorrectly")
+    @DisplayName("Test negative edit user with wrong email format")
+    @Severity(MINOR)
     public void testEditUserWithWringData() {
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -175,6 +197,9 @@ public class Ex17UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "email", userData.get("email"));
     }
     @Test
+    @Description("This test verifies that the 'firstName' cannot be changed if is too short")
+    @DisplayName("Test negative edit user with short firstName")
+    @Severity(MINOR)
     public void testEditUserWithShortFirstname() {
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();

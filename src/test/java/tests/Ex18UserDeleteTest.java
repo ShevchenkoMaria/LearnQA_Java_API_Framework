@@ -1,18 +1,28 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.qameta.allure.SeverityLevel.*;
+
+@Epic("Checking different types request with url 'https://playground.learnqa.ru/api/user/'")
+@Feature("Checking DELETE-requests for edit user")
+@Issue("DELETE-requests")
 public class Ex18UserDeleteTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests= new ApiCoreRequests();
     @Test
+    @Description("The test verifies that one user's  cannot be deleted if the request is performed by another user, in this case the base one")
+    @DisplayName("Test negative delete user with auth as based user")
+    @Severity(MINOR)
     public void testEditUserAuthAsBasedUser() {
         //LOGIN USER
         Map<String, String> authData = new HashMap<>();
@@ -28,6 +38,9 @@ public class Ex18UserDeleteTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseDeleteUser, "Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
     }
     @Test
+    @Description("This test successfully delete user")
+    @DisplayName("Test positive delete user")
+    @Severity(CRITICAL)
     public void testUserDeleteAuthAsSameUser() {
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -56,6 +69,9 @@ public class Ex18UserDeleteTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseUserData, "User not found");
     }
     @Test
+    @Description("The test verifies that one user's  cannot be deleted if the request is performed by another user")
+    @DisplayName("Test negative delete user with auth as another user")
+    @Severity(MINOR)
     public void testUserDeleteAuthAsAnotherUser(){
         //GENERATE USER№1
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -104,6 +120,9 @@ public class Ex18UserDeleteTest extends BaseTestCase {
         Assertions.assertJsonHasField(responseUser2Data,"id");
     }
     @Test
+    @Description("This test verifies that user data cannot be deleted if the request is made by an unauthorized user")
+    @DisplayName("Test negative delete user data without auth")
+    @Severity(NORMAL)
     public void testUserDeleteWithoutAuth(){
         //GENERATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
